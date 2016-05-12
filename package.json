@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +16,8 @@
     "pretty-js": "^0.1.8",
     "retsu": "^2.0.2",
     "sift": "^3.2.1"
-  }
+},
+"engines": {
+    "node": "5.7.0"
+  },
 }
