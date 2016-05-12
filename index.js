@@ -67,7 +67,7 @@ app.get('/:query', function (req, res) {
         }
     }, db)
     res.setHeader('Content-Type', 'application/json');
-    res.send(pretty(JSON.stringify(result)));
+    res.send(JSON.stringify(result));
 });
 app.get('/:query/order/:order', function (req, res) {
     var result = new Set(), query = req.params.query,  order = req.params.order;
@@ -90,7 +90,7 @@ app.get('/:query/order/:order', function (req, res) {
         result = result.sort(function(a,b){ return a[order] < b[order] })
     }
     res.setHeader('Content-Type', 'application/json');
-    res.send(pretty(JSON.stringify(result)));
+    res.send(JSON.stringify(result));
 });
 app.get('/:query/limit/:limit/page/:page', function (req, res) {
     var result = new Set(), limit = req.params.limit,  page = req.params.page, query = req.params.query;
@@ -108,7 +108,7 @@ app.get('/:query/limit/:limit/page/:page', function (req, res) {
     }, db);
     result = r.limit(result,page*limit,limit);
     res.setHeader('Content-Type', 'application/json');
-    res.send(pretty(JSON.stringify(result)));
+    res.send(JSON.stringify(result));
 });
 app.get('/:query/order/:order/limit/:limit/page/:page', function (req, res) {
     var result = new Set(), limit = req.params.limit,  page = req.params.page, query = req.params.query, order = req.params.order;
@@ -131,7 +131,7 @@ app.get('/:query/order/:order/limit/:limit/page/:page', function (req, res) {
     }
     result = r.limit(result,page*limit,limit);
     res.header('Content-Type', 'application/json');
-    res.send(pretty(JSON.stringify(result)));
+    res.send(JSON.stringify(result));
 });
 app.listen(app.get('port'), function () {
   console.log('Example app listening on port '+app.get('port')+'!');
