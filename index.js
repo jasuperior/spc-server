@@ -8,7 +8,11 @@ var db = [];
 var ref = new fb("https://spcbase.firebaseio.com");
 
 app.set('port', (process.env.PORT || 3000))
-
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 function naturalCompare(key, a, b) {
     var ax = [], bx = [];
 
@@ -126,7 +130,7 @@ app.get('/:query/order/:order/limit/:limit/page/:page', function (req, res) {
         result = result.sort(function(a,b){ return a[order] < b[order] })
     }
     result = r.limit(result,page*limit,limit);
-    res.setHeader('Content-Type', 'application/json');
+    res.header('Content-Type', 'application/json');
     res.send(pretty(JSON.stringify(result)));
 });
 app.listen(app.get('port'), function () {
