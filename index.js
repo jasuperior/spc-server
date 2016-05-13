@@ -57,20 +57,21 @@ packages.on("child_removed", function(snapshot) {
   //     }
   //   })
 });
-app.get('/popular/page/:page/limit/:limit', function (req, res) {
-    var page = req.params.page, limit = req.params.limit;
+app.get('/popular/page/:page(\\d+)/limit/:limit', function (req, res) {
+    var page = parseInt(req.params.page), limit = parseInt(req.params.limit);
     var result = db;
     try{
         result = result.sort(naturalCompare.bind(result,"popularity"));
     }catch(e){
         result = result.sort(function(a,b){ return a["popularity"] < b["popularity"] })
     }
+    console.log(page*limit, (page+1)*limit);
     result = r.limit(result,page*limit,limit);
     res.header('Content-Type', 'application/json');
     res.send(JSON.stringify(result));
 });
 app.get('/new/page/:page/limit/:limit', function (req, res) {
-    var page = req.params.page, limit = req.params.limit;
+    var page = parseInt(req.params.page), limit = parseInt(req.params.limit);
     var result = db;
     try{
         result = result.sort(naturalCompare.bind(result,"update_date"));
@@ -124,7 +125,7 @@ app.get('/:query/order/:order', function (req, res) {
     res.send(JSON.stringify(result));
 });
 app.get('/:query/limit/:limit/page/:page', function (req, res) {
-    var result = new Set(), limit = req.params.limit,  page = req.params.page, query = req.params.query;
+    var result = new Set(), page = parseInt(req.params.page), limit = parseInt(req.params.limit), query = req.params.query;
     var result = sift({
         $where: function(){
             if(this.name.search(new RegExp(query,"im")) > -1 )
@@ -142,7 +143,7 @@ app.get('/:query/limit/:limit/page/:page', function (req, res) {
     res.send(JSON.stringify(result));
 });
 app.get('/:query/order/:order/limit/:limit/page/:page', function (req, res) {
-    var result = new Set(), limit = req.params.limit,  page = req.params.page, query = req.params.query, order = req.params.order;
+    var result = new Set(), page = parseInt(req.params.page), limit = parseInt(req.params.limit), query = req.params.query, order = req.params.order;
     var result = sift({
         $where: function(){
             if(this.name.search(new RegExp(query,"im")) > -1 )
