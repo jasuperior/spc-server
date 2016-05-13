@@ -57,6 +57,30 @@ packages.on("child_removed", function(snapshot) {
   //     }
   //   })
 });
+app.get('/popular/page/:page/limit/:limit', function (req, res) {
+    var page = req.params.page, limit = req.params.limit;
+    var result = db;
+    try{
+        result = result.sort(naturalCompare.bind(result,"popularity"));
+    }catch(e){
+        result = result.sort(function(a,b){ return a["popularity"] < b["popularity"] })
+    }
+    result = r.limit(result,page*limit,limit);
+    res.header('Content-Type', 'application/json');
+    res.send(JSON.stringify(result));
+});
+app.get('/new/page/:page/limit/:limit', function (req, res) {
+    var page = req.params.page, limit = req.params.limit;
+    var result = db;
+    try{
+        result = result.sort(naturalCompare.bind(result,"update_date"));
+    }catch(e){
+        result = result.sort(function(a,b){ return a["update_date"] < b["update_date"] })
+    }
+    result = r.limit(result,page*limit,limit);
+    res.header('Content-Type', 'application/json');
+    res.send(JSON.stringify(result));
+});
 app.get('/:query', function (req, res) {
     var result = new Set(), query = req.params.query;
     var result = sift({
@@ -140,6 +164,7 @@ app.get('/:query/order/:order/limit/:limit/page/:page', function (req, res) {
     res.header('Content-Type', 'application/json');
     res.send(JSON.stringify(result));
 });
+
 app.listen(app.get('port'), function () {
   console.log('Example app listening on port '+app.get('port')+'!');
 });
