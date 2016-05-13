@@ -13,6 +13,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
 function naturalCompare(key, a, b) {
     var ax = [], bx = [];
 
@@ -34,13 +35,17 @@ packages.on("child_added", function(snap){
     db.push(snap.val())
 });
 packages.on("child_changed", function(snapshot) {
-  var obj = snapshot.val();
+  var obj = snapshot.val(), key;
+  console.log("change",obj);
   db.find(function(v,k){
       if(v.name == obj.name){
           Object.assign(v,obj);
+          key = k;
+        //   console.log(intersect(v,obj))
           return true;
       }
-    })
+  });
+  db[key] = obj;
 });
 packages.on("child_removed", function(snapshot) {
   var obj = snapshot.val();
@@ -56,11 +61,11 @@ app.get('/:query', function (req, res) {
     var result = new Set(), query = req.params.query;
     var result = sift({
         $where: function(){
-            if(this.name.indexOf(query) > -1 )
+            if(this.name.indexOf(new RegExp(query,"im")) > -1 )
                 return true;
-            if(this.readme && this.readme.indexOf(query) > -1)
+            if(this.readme && this.readme.indexOf(new RegExp(query,"im")) > -1)
                 return true;
-            if(this.author.indexOf(query) > -1 )
+            if(this.author.indexOf(new RegExp(query,"im")) > -1 )
                 return true;
             if(this.keywords && this.keywords.find(function(v){ return query.indexOf(v) > -1 }))
                 return true;
@@ -73,11 +78,11 @@ app.get('/:query/order/:order', function (req, res) {
     var result = new Set(), query = req.params.query,  order = req.params.order;
     var result = sift({
         $where: function(){
-            if(this.name.indexOf(query) > -1 )
+            if(this.name.indexOf(new RegExp(query,"im")) > -1 )
                 return true;
-            if(this.readme && this.readme.indexOf(query) > -1)
+            if(this.readme && this.readme.indexOf(new RegExp(query,"im")) > -1)
                 return true;
-            if(this.author.indexOf(query) > -1 )
+            if(this.author.indexOf(new RegExp(query,"im")) > -1 )
                 return true;
             if(this.keywords && this.keywords.find(function(v){ return query.indexOf(v) > -1 }))
                 return true;
@@ -96,11 +101,11 @@ app.get('/:query/limit/:limit/page/:page', function (req, res) {
     var result = new Set(), limit = req.params.limit,  page = req.params.page, query = req.params.query;
     var result = sift({
         $where: function(){
-            if(this.name.indexOf(query) > -1 )
+            if(this.name.indexOf(new RegExp(query,"im")) > -1 )
                 return true;
-            if(this.readme && this.readme.indexOf(query) > -1)
+            if(this.readme && this.readme.indexOf(new RegExp(query,"im")) > -1)
                 return true;
-            if(this.author.indexOf(query) > -1 )
+            if(this.author.indexOf(new RegExp(query,"im")) > -1 )
                 return true;
             if(this.keywords && this.keywords.find(function(v){ return query.indexOf(v) > -1 }))
                 return true;
@@ -114,11 +119,11 @@ app.get('/:query/order/:order/limit/:limit/page/:page', function (req, res) {
     var result = new Set(), limit = req.params.limit,  page = req.params.page, query = req.params.query, order = req.params.order;
     var result = sift({
         $where: function(){
-            if(this.name.indexOf(query) > -1 )
+            if(this.name.indexOf(new RegExp(query,"im")) > -1 )
                 return true;
-            if(this.readme && this.readme.indexOf(query) > -1)
+            if(this.readme && this.readme.indexOf(new RegExp(query,"im")) > -1)
                 return true;
-            if(this.author.indexOf(query) > -1 )
+            if(this.author.indexOf(new RegExp(query,"im")) > -1 )
                 return true;
             if(this.keywords && this.keywords.find(function(v){ return query.indexOf(v) > -1 }))
                 return true;
